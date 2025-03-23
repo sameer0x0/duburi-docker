@@ -1,0 +1,35 @@
+services:
+  redis:
+    image: "redis:alpine"
+    networks:
+      - task_network
+
+  producer:
+    build: ./producer
+    depends_on:
+      - redis
+    networks:
+      - task_network
+
+  worker1:
+    build: ./worker1
+    depends_on:
+      - redis
+    environment:
+      - WORKER_NAME=Worker1
+    networks:
+      - task_network
+
+  worker2:
+    build: ./worker2
+    depends_on:
+      - redis
+    environment:
+      - WORKER_NAME=Worker2
+    networks:
+      - task_network
+
+networks:
+  task_network:
+    driver: bridge
+
